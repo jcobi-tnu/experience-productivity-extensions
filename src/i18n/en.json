@@ -15,7 +15,18 @@
         "microsoft.noFilesMessage": "Go to OneDrive to start adding files",
         "microsoft.noEmailTitle": "No Emails",
         "microsoft.noEmailMessage": "Your inbox is empty.",
+        "microsoft.noTasksTitle": "No tasks",
+        "microsoft.noTasksMessage": "You don’t have any tasks to show.",
+        "microsoft.noActiveTasksTitle": "No active tasks",
+        "microsoft.noActiveTasksMessage": "All tasks are completed or hidden by filters.",
         "signIn": "Sign in",
-        "signOut": "Sign out"
+        "signOut": "Sign out",
+        "common.error": "Something went wrong",
+        "common.retry": "Retry",
+        "common.loading": "Loading…",
+        "common.refresh": "Refresh",
+        "microsoft.todo.showCompleted": "Show completed",
+        "microsoft.todo.due": "Due",
+        "microsoft.todo.noDue": "No due date"
     }
 }

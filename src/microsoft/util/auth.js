@@ -10,13 +10,17 @@ const logger = log.getLogger('Microsoft');
 
 // "offline_access" scope is necessary for obtaining refresh token in EXP mobile .
 export const microsoftScopes = [
-    'files.read',
-    'files.read.all',
-    'mail.read',
-    'mail.read.shared',
-    'user.read',
-    'user.readbasic.all',
-    "offline_access"
+    'Files.Read',
+    'Files.Read.All',
+    'Mail.Read',
+    'Mail.Read.Shared',
+    'User.Read',
+    'User.ReadBasic.All',
+    "offline_access",
+    'Tasks.Read',
+    'Tasks.ReadWrite',
+    'openid',
+    'profile'
 ];
 
 export function authorityUrl(tenantId) {
@@ -63,6 +67,7 @@ export async function login({aadClientId, aadRedirectUrl, aadTenantId, cacheStor
         }
 
         const response = await msalClient.loginPopup(loginRequest);
+        console.log('Granted scopes:', response.scopes);
         if (response && response.account) {
             const {account} = response;
             msalClient.setActiveAccount(account);

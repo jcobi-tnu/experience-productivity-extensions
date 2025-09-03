@@ -23,6 +23,15 @@ export function MicrosoftCardProvider({children, intl}) {
                 noFiles: {
                     titleId: 'microsoft.noFilesTitle',
                     messageId: 'microsoft.noFilesMessage'
+                },
+                // New: To Do-specific no items messages
+                noTasks: {
+                    titleId: 'microsoft.noTasksTitle',
+                    messageId: 'microsoft.noTasksMessage'
+                },
+                noActiveTasks: {
+                    titleId: 'microsoft.noActiveTasksTitle',
+                    messageId: 'microsoft.noActiveTasksMessage'
                 }
             }
         }

@@ -1,8 +1,10 @@
 // Copyright 2021-2023 Ellucian Company L.P. and its affiliates.
 
+
+
 module.exports = {
-    name: 'microsoft-productivity-tools',
-    publisher: '',
+    name: 'Microsoft Productivity Tools',
+    publisher: 'Trevecca Nazarene University',
     configuration: {
         client: [{
             key: 'aadRedirectUrl',
@@ -21,18 +23,14 @@ module.exports = {
             required: true
         }]
 	},
-    cards: [{
-        type: 'OutlookCard',
-        source: './src/microsoft/cards/OutlookMailCard',
-        title: 'Outlook',
-        displayCardType: 'Outlook',
-        description: 'This card displays Office 365 Mail'
-    },
+    cards: [
     {
-        type: 'OneDriveCard',
-        source: './src/microsoft/cards/OneDriveCard',
-        title: 'OneDrive',
-        displayCardType: 'OneDrive',
-        description: 'This card displays OneDrive'
+        type: 'MicrosoftToDoCard',
+        source: './src/microsoft/cards/ToDo',
+        title: 'Microsoft To Do',
+        displayCardType: 'Microsoft ToDo',
+        description: 'This card displays your tasks across lists'
     }]
 }
+
+
