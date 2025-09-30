@@ -49,11 +49,96 @@ export function MicrosoftAuthProvider({ children }) {
         }
     }, [])
 
+    /*
     useEffect(() => {
         if (window?.invokeNativeFunction) {
             window.invokeNativeFunction('acquireMobileToken', {randomVal: Math.random(), extName:`${name.replace(/ /g, '')}+${publisher.replace(/ /g, '')}`}, false)
         }
     }, [])
+    */
+
+    useEffect(() => {
+
+        const timeout = setTimeout(() => {
+
+            logger.warn('Native token acquisition timed out – falling back to ready state');
+
+            setState('ready');
+
+            setLoadingStatus(false);
+
+        }, 3000);
+
+
+
+        const payload = {
+
+            randomVal: Math.random(),
+
+            extName: `${name.replace(/ /g, '')}+${publisher.replace(/ /g, '')}`
+
+        };
+
+
+
+        const invokeFn = () => {
+
+            if (!window?.invokeNativeFunction) {
+
+                logger.debug('Not in native app – skipping invokeNativeFunction');
+
+                setState('ready');
+
+                clearTimeout(timeout);
+
+                return;
+
+            }
+
+
+
+            try {
+
+                logger.debug('Invoking getNewAccessToken from native app');
+
+                window.invokeNativeFunction('getNewAccessToken', payload, false);
+
+            } catch (err) {
+
+                logger.warn('getNewAccessToken not available, trying acquireMobileToken', err);
+
+                try {
+
+                    window.invokeNativeFunction('acquireMobileToken', payload, false);
+
+                } catch (err2) {
+
+                    logger.error('invokeNativeFunction failed entirely', err2);
+
+                    setState('ready');
+
+                    setLoadingStatus(false);
+
+                    clearTimeout(timeout);
+
+                }
+
+            }
+
+        };
+
+
+
+        invokeFn();
+
+
+
+        return () => clearTimeout(timeout);
+
+    }, [setLoadingStatus]);
+
+
+
 
     useEffect(() => {
         function setLoading(status) {
