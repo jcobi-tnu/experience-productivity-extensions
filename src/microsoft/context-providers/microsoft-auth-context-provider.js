@@ -33,6 +33,12 @@ export function MicrosoftAuthProvider({ children }) {
 
     useEffect(() => {
         function mobileLogin(accessToken) {
+            // eslint-disable-next-line no-console
+            console.log('🔥 mobileLogin callback invoked');
+            // eslint-disable-next-line no-console
+            console.log('accessToken received:', accessToken ? 'YES' : 'NO');
+            // eslint-disable-next-line no-console
+            logger.debug('mobileLogin callback invoked with token');
             const options = {
                 authProvider: {
                     getAccessToken: () => (accessToken)
@@ -42,106 +48,53 @@ export function MicrosoftAuthProvider({ children }) {
             if (graphClient) {
                 setGraphClient(() => graphClient);
                 setLoggedIn(true);
+                // eslint-disable-next-line no-console
+                logger.debug('Graph client initialized, loggedIn set to true');
             }
         }
+        function getNewAccessToken(data) {
+            // eslint-disable-next-line no-console
+            logger.debug('getNewAccessToken callback invoked', data);
+            if (data?.accessToken) {
+                mobileLogin(data.accessToken);
+            }
+    }
         if (window?.setInvokable) {
+            // eslint-disable-next-line no-console
+            logger.debug('Setting up mobileLogin callback');
             window.setInvokable('mobileLogin', mobileLogin);
+            window.setInvokable('getNewAccessToken', getNewAccessToken);
         }
     }, [])
 
-    /*
-    useEffect(() => {
-        if (window?.invokeNativeFunction) {
-            window.invokeNativeFunction('acquireMobileToken', {randomVal: Math.random(), extName:`${name.replace(/ /g, '')}+${publisher.replace(/ /g, '')}`}, false)
-        }
-    }, [])
-    */
 
     useEffect(() => {
-
-        const timeout = setTimeout(() => {
-
-            logger.warn('Native token acquisition timed out – falling back to ready state');
-
-            setState('ready');
-
-            setLoadingStatus(false);
-
-        }, 3000);
-
-
-
-        const payload = {
-
+        // eslint-disable-next-line no-console
+        logger.debug('Attempting to call acquireMobileToken');
+    if (window?.invokeNativeFunction) {
+        window.invokeNativeFunction('acquireMobileToken', {
             randomVal: Math.random(),
-
             extName: `${name.replace(/ /g, '')}+${publisher.replace(/ /g, '')}`
+        }, false)
+        // eslint-disable-next-line no-console
+        logger.debug('acquireMobileToken called');
 
-        };
+        if (window?.isInNativeApp && window.isInNativeApp()) {
+            // eslint-disable-next-line no-console
+            logger.debug('In native app, setting state to ready');
+            setTimeout(() => setState('ready'), 100);
+            // Small delay to ensure callbacks are registered
+        }
 
-
-
-        const invokeFn = () => {
-
-            if (!window?.invokeNativeFunction) {
-
-                logger.debug('Not in native app – skipping invokeNativeFunction');
-
-                setState('ready');
-
-                clearTimeout(timeout);
-
-                return;
-
-            }
-
-
-
-            try {
-
-                logger.debug('Invoking getNewAccessToken from native app');
-
-                window.invokeNativeFunction('getNewAccessToken', payload, false);
-
-            } catch (err) {
-
-                logger.warn('getNewAccessToken not available, trying acquireMobileToken', err);
-
-                try {
-
-                    window.invokeNativeFunction('acquireMobileToken', payload, false);
-
-                } catch (err2) {
-
-                    logger.error('invokeNativeFunction failed entirely', err2);
-
-                    setState('ready');
-
-                    setLoadingStatus(false);
-
-                    clearTimeout(timeout);
-
-                }
-
-            }
-
-        };
-
-
-
-        invokeFn();
-
-
-
-        return () => clearTimeout(timeout);
-
-    }, [setLoadingStatus]);
+    }}, [])
 
 
 
 
     useEffect(() => {
         function setLoading(status) {
+            // eslint-disable-next-line no-console
+            logger.debug('setLoading callback invoked with status:', status);
             if (status === 'true') {
                 setLoadingStatus(true)
             } else if (status === 'false') {
@@ -150,6 +103,8 @@ export function MicrosoftAuthProvider({ children }) {
             }
         }
         if (window?.setInvokable) {
+            // eslint-disable-next-line no-console
+            logger.debug('Setting up setLoading callback');
             window.setInvokable('setLoading', setLoading);
         }
     }, [])
@@ -241,8 +196,10 @@ export function MicrosoftAuthProvider({ children }) {
     }, [graphClient, error, loggedIn, login, state]);
 
     useEffect(() => {
+        // eslint-disable-next-line no-console
         logger.debug('MicrosoftAuthProvider mounted');
         return () => {
+            // eslint-disable-next-line no-console
             logger.debug('MicrosoftAuthProvider unmounted');
         }
     }, []);
