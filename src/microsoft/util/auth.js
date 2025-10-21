@@ -67,7 +67,6 @@ export async function login({aadClientId, aadRedirectUrl, aadTenantId, cacheStor
         }
 
         const response = await msalClient.loginPopup(loginRequest);
-        console.log('Granted scopes:', response.scopes);
         if (response && response.account) {
             const {account} = response;
             msalClient.setActiveAccount(account);
