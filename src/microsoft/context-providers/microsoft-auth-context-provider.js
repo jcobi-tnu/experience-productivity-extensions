@@ -33,7 +33,6 @@ export function MicrosoftAuthProvider({ children }) {
     const { setLoadingStatus } = useExtensionControl();
 
     useEffect(() => {
-    console.log('🔥 === STARTING CALLBACK REGISTRATION ===');
 
     // Check if setInvokable is available
     if (!window?.setInvokable) {
@@ -41,26 +40,23 @@ export function MicrosoftAuthProvider({ children }) {
         return;
     }
 
-    console.log('✅ window.setInvokable is available');
+    // console.log('✅ window.setInvokable is available');
 
     // ===== CALLBACK 1: mobileLogin =====
   function mobileLogin(data) {
-    console.log('🔥🔥🔥 mobileLogin CALLED');
-    console.log('🔥 data type:', typeof data);
-    console.log('🔥 data raw:', data);
+    
 
     try {
         let parsedData;
 
         // Parse if it's a JSON string
         if (typeof data === 'string') {
-            console.log('🔥 Parsing JSON string...');
             parsedData = JSON.parse(data);
         } else {
             parsedData = data;
         }
 
-        console.log('🔥 Parsed data:', parsedData);
+        // console.log('🔥 Parsed data:', parsedData);
 
         // Extract the access token
         const accessToken = parsedData?.accessToken;
@@ -70,12 +66,12 @@ export function MicrosoftAuthProvider({ children }) {
             return;
         }
 
-        console.log('✅ Access token found');
-        console.log('   Client ID:', parsedData.clientId);
-        console.log('   Platform:', parsedData.platform);
-        console.log('   Provider:', parsedData.provider);
-        console.log('   Token length:', accessToken.length);
-        console.log('   Expires in:', parsedData.expiresIn);
+        // console.log('✅ Access token found');
+        // console.log('   Client ID:', parsedData.clientId);
+        // console.log('   Platform:', parsedData.platform);
+        // console.log('   Provider:', parsedData.provider);
+        // console.log('   Token length:', accessToken.length);
+        // console.log('   Expires in:', parsedData.expiresIn);
 
         // Initialize Graph client with the token
         const options = {
@@ -90,7 +86,7 @@ export function MicrosoftAuthProvider({ children }) {
             setGraphClient(() => graphClient);
             setLoggedIn(true);
             setState('ready');
-            console.log('✅ Graph client initialized successfully!');
+            // console.log('✅ Graph client initialized successfully!');
         } else {
             console.error('❌ Failed to initialize graph client');
         }
@@ -105,18 +101,18 @@ export function MicrosoftAuthProvider({ children }) {
 
     // ===== CALLBACK 2: getNewAccessToken =====
 function getNewAccessToken(data) {
-    console.log('🔥🔥🔥 getNewAccessToken CALLED');
-    console.log('🔥 data type:', typeof data);
-    console.log('🔥 data raw:', data);
+    // console.log('🔥🔥🔥 getNewAccessToken CALLED');
+    // console.log('🔥 data type:', typeof data);
+    // console.log('🔥 data raw:', data);
 
     try {
         const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
 
-        console.log('🔥 Parsed data:', parsedData);
+        // console.log('🔥 Parsed data:', parsedData);
 
         // Capture platform if provided
         if (parsedData?.platform) {
-            console.log('📱 Platform detected:', parsedData.platform);
+            // console.log('📱 Platform detected:', parsedData.platform);
             setPlatform(parsedData.platform);
         }
 
@@ -124,16 +120,16 @@ function getNewAccessToken(data) {
         const { accessToken } = parsedData;
 
         if (accessToken) {
-            console.log('✅ Access token found, calling mobileLogin...');
+            // console.log('✅ Access token found, calling mobileLogin...');
             mobileLogin({ ...parsedData, accessToken });
         } else if (parsedData?.platform) {
-            console.log('ℹ️ Platform info only (no cached token):', parsedData.platform);
+            // console.log('ℹ️ Platform info only (no cached token):', parsedData.platform);
             setLoggedIn(false);
             setGraphClient(null);
             setState('ready');
-            console.log('🔄 User signed out, state updated');
+            // console.log('🔄 User signed out, state updated');
         } else {
-            console.log('⚠️ Unexpected data structure:', parsedData);
+            // console.log('⚠️ Unexpected data structure:', parsedData);
         }
     } catch (error) {
         console.error('❌ Error parsing getNewAccessToken data:', error);
@@ -143,7 +139,7 @@ function getNewAccessToken(data) {
 
     // ===== CALLBACK 3: setLoading =====
     function setLoading(status) {
-        console.log('🔥🔥🔥 setLoading CALLED with status:', status);
+        // console.log('🔥🔥🔥 setLoading CALLED with status:', status);
 
         if (status === 'true' || status === true) {
             setLoadingStatus(true);
@@ -155,48 +151,48 @@ function getNewAccessToken(data) {
 
     // ===== CALLBACK 4: mobileLogOut =====
     function mobileLogOut() {
-        console.log('🔥🔥🔥 mobileLogOut CALLED');
+        // console.log('🔥🔥🔥 mobileLogOut CALLED');
         setState('event-logout');
     }
 
     // ===== REGISTERING ALL CALLBACKS =====
-    console.log('🔥 Registering mobileLogin...');
+    // console.log('🔥 Registering mobileLogin...');
     window.setInvokable('mobileLogin', mobileLogin);
 
-    console.log('🔥 Registering getNewAccessToken...');
+    // console.log('🔥 Registering getNewAccessToken...');
     window.setInvokable('getNewAccessToken', getNewAccessToken);
 
-    console.log('🔥 Registering setLoading...');
+    // console.log('🔥 Registering setLoading...');
     window.setInvokable('setLoading', setLoading);
 
-    console.log('🔥 Registering mobileLogout...');
+    // console.log('🔥 Registering mobileLogout...');
     window.setInvokable('mobileLogout', mobileLogOut);
 
     // ===== VERIFYING REGISTRATION =====
-    console.log('🔥 Verifying callbacks are accessible...');
+    // console.log('🔥 Verifying callbacks are accessible...');
     if (window.mobileLogin) {
-        console.log('✅ window.mobileLogin is accessible');
+        // console.log('✅ window.mobileLogin is accessible');
     } else {
         console.error('❌ window.mobileLogin is NOT accessible');
     }
 
-    console.log('🔥 === CALLBACK REGISTRATION COMPLETE ===');
+    // console.log('🔥 === CALLBACK REGISTRATION COMPLETE ===');
 
     // catch-all logging
     const originalSetInvokable = window.setInvokable;
     window.setInvokable = function(name, callback) {
-        console.log(`🔥 setInvokable called for: ${name}`);
+        // console.log(`🔥 setInvokable called for: ${name}`);
         return originalSetInvokable(name, (...args) => {
-            console.log(`🔥🔥🔥 Callback "${name}" invoked with args:`, args);
+            // console.log(`🔥🔥🔥 Callback "${name}" invoked with args:`, args);
             return callback(...args);
         });
     };
 
     // ===== NOW TRYING TO GET CACHED TOKEN =====
-    console.log('🔥 Attempting to call acquireMobileToken...');
+    // console.log('🔥 Attempting to call acquireMobileToken...');
     if (window?.invokeNativeFunction) {
         const extName = `${name.replace(/ /g, '')}+${publisher.replace(/ /g, '')}`;
-        console.log('🔥 Calling userSignIn with extName:', extName);
+        // console.log('🔥 Calling userSignIn with extName:', extName);
         window.invokeNativeFunction(
             'acquireMobileToken',
             {
@@ -205,10 +201,10 @@ function getNewAccessToken(data) {
             },
             false
         );
-        console.log('✅ acquireMobileToken called');
+        // console.log('✅ acquireMobileToken called');
 
         if (window?.isInNativeApp && window.isInNativeApp()) {
-            console.log('✅ In native app, setting state to ready after 100ms');
+            // console.log('✅ In native app, setting state to ready after 100ms');
             setTimeout(() => setState('ready'), 100);
         }
     } else {
@@ -216,14 +212,14 @@ function getNewAccessToken(data) {
     }
 
     function onAuthError(error) {
-    console.log('🔥🔥🔥 onAuthError CALLED');
+    // console.log('🔥🔥🔥 onAuthError CALLED');
     console.error('❌ Auth error:', error);
     setError(true);
     setState('ready');
 }
 
 // Register AuthError
-console.log('🔥 Registering onAuthError...');
+// console.log('🔥 Registering onAuthError...');
 window.setInvokable('onAuthError', onAuthError);
 
 }, []);

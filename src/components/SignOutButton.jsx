@@ -26,7 +26,7 @@ function SignOutButton({ classes, className = '', onClick }) {
                 extName: `${name.replace(/ /g, '')}+${publisher.replace(/ /g, '')}`
             };
 
-            console.log('🔥 ToDo card calling userSignOut:', JSON.stringify(params, null, 2));
+            // console.log('🔥 ToDo card calling userSignOut:', JSON.stringify(params, null, 2));
             // ← Flag is false
             window.invokeNativeFunction('userSignOut', params, false);
         } else {

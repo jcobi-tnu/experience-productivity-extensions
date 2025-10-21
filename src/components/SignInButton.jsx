@@ -40,7 +40,7 @@ function SignInButton({ classes, onClick }) {
                 extName: `${name.replace(/ /g, '')}+${publisher.replace(/ /g, '')}`
             };
 
-            console.log('🔥 ToDo card calling userSignIn:', JSON.stringify(params, null, 2));
+            // console.log('🔥 ToDo card calling userSignIn:', JSON.stringify(params, null, 2));
 
             window.invokeNativeFunction('userSignIn', params, true);
         } else {
